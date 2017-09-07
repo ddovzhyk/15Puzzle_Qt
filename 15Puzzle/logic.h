@@ -15,43 +15,26 @@ public:
         NUM_EMPTY_CELL = 0,
     };
 
-    enum Roles {
-        Number,
-        PositionX,
-        PositionY,
-    };
-
-    struct Cell
-    {
-        int number;
-        int x;
-        int y;
-    };
-
 public:
     explicit Logic(QObject *parent = 0);
     ~Logic();
 
-    Q_PROPERTY(int boardSize READ boardSize CONSTANT)
-    Q_PROPERTY(int numberCells READ numberCells CONSTANT)
-    int boardSize() const;
-    int numberCells() const;
+    Q_PROPERTY(int boardSize READ getBoardSize CONSTANT)
+    int getBoardSize() const;
 
     void setStartCoordinates(void);
-    bool isEmptyCell(int x, int y) const;
-    bool isCorrectCoordinates(int x, int y) const;
-    int getIndexCell(int x, int y) const;
-    Q_INVOKABLE void move(int number, int fromX, int fromY);
+    bool isTrueIndex(int index) const;
+    Q_INVOKABLE void move(int index);
     Q_INVOKABLE bool checkWin(void) const;
 
 
 protected:
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const override;
-    QHash<int, QByteArray> roleNames() const override;
+//    QHash<int, QByteArray> roleNames() const override;
 
 private:
-    QVector<Cell> cells;
+    QVector<int> cells[16];
 };
 
 #endif

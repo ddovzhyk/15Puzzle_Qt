@@ -3,143 +3,109 @@
 Logic::Logic(QObject *parent)
     : QAbstractListModel(parent)
 {
-    for (int i = 0; i < NUMBER_CELLS; ++i)
-        cells << Cell();
+//    for (int i = 0; i < NUMBER_CELLS; ++i)
+//        cells << Cell();
     setStartCoordinates();
 }
 
 Logic::~Logic()
 {
-    cells.clear();
+//    cells.clear();
 }
 
-int Logic::boardSize() const
+int Logic::getBoardSize() const
 {
     return BOARD_SIZE;
 }
 
-int Logic::numberCells() const
-{
-    return NUMBER_CELLS;
-}
+//int Logic::rowCount(const QModelIndex &) const
+//{
+//    return NUMBER_CELLS;
+//}
 
-int Logic::rowCount(const QModelIndex &) const
-{
-    return cells.size();
-}
+//QHash<int, QByteArray> Logic::roleNames() const
+//{
+//    QHash<int, QByteArray> names;
 
-QHash<int, QByteArray> Logic::roleNames() const
-{
-    QHash<int, QByteArray> names;
+//    names.insert(Roles::Number, "number");
 
-    names.insert(Roles::Number, "number");
-    names.insert(Roles::PositionX, "positionX");
-    names.insert(Roles::PositionY, "positionY");
+//    return names;
+//}
 
-    return names;
-}
+//QVariant Logic::data(const QModelIndex &modelIndex, int role) const
+//{
+//    if (!modelIndex.isValid())
+//        return QVariant();
 
-QVariant Logic::data(const QModelIndex &modelIndex, int role) const
-{
-    if (!modelIndex.isValid())
-        return QVariant();
+//    int index = static_cast<int>(modelIndex.row());
 
-    int index = static_cast<int>(modelIndex.row());
+//    if (index >= NUMBER_CELLS || index < 0)
+//        return QVariant();
 
-    if (index >= cells.size() || index < 0)
-        return QVariant();
+//    Cell &cell = cells[index];
 
-    Cell cell = cells[index];
-
-    switch (role) {
-        case Roles::Number: return cell.number;
-        case Roles::PositionX: return cell.x;
-        case Roles::PositionY: return cell.y;
-    }
-    return QVariant();
-}
+//    switch (role) {
+//        case Roles::Number: return cell.number;
+//    }
+//    return QVariant();
+//}
 
 void Logic::setStartCoordinates(void)
 {
-   cells[0] = Cell { 1, 0, 0 };
-   cells[1] = Cell { 2, 1, 0 };
-   cells[2] = Cell { 3, 2, 0 };
-   cells[3] = Cell { 4, 3, 0 };
-   cells[4] = Cell { 5, 0, 1 };
-   cells[5] = Cell { 6, 1, 1 };
-   cells[6] = Cell { 7, 2, 1 };
-   cells[7] = Cell { 8, 3, 1 };
-   cells[8] = Cell { 10, 0, 2 };
-   cells[9] = Cell { 11, 1, 2 };
-   cells[10] = Cell { 12, 2, 2 };
-   cells[11] = Cell { 15, 3, 2 };
-   cells[12] = Cell { 9, 0, 3 };
-   cells[13] = Cell { 13, 1, 3 };
-   cells[14] = Cell { 14, 2, 3 };
-   cells[15] = Cell { 0, 3, 3 };
+   cells[0] = 1;
+   cells[1] = 2;
+   cells[2] = 3;
+   cells[3] = 4;
+   cells[4] = 5;
+   cells[5] = 6;
+   cells[6] = 7;
+   cells[7] = 8;
+   cells[8] = 10;
+   cells[9] = 11;
+   cells[10] = 12;
+   cells[11] = 15;
+   cells[12] = 9;
+   cells[13] = 13;
+   cells[14] = 14;
+   cells[15] = 0;
 }
 
-bool Logic::isEmptyCell(int x, int y) const
+bool Logic::isTrueIndex(int index) const
 {
-    int index;
-
-    index = getIndexCell(x, y);
-    if (cells[index].number == NUM_EMPTY_CELL)
+    if (index >= 0 && index < NUMBER_CELLS)
         return true;
-    return false;
+    else
+        return false;
 }
 
-bool Logic::isCorrectCoordinates(int x, int y) const
+void Logic::move(int index)
 {
-    if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE)
-        return true;
-    return false;
-}
+//    int empty_num;
+//    int index_empty_cell;
 
-int Logic::getIndexCell(int x, int y) const
-{
-    for (int i = 0; i < NUMBER_CELLS; ++i)
-        if (cells[i].x == x && cells[i].y == y)
-            return i;
-    return -1;
-}
+//    if (number < 1)
+//        return ;
 
-void Logic::move(int number, int fromX, int fromY)
-{
-    int index;
-    int empty_num;
-    int index_empty_cell;
+//    index_empty_cell = -1;
+//    index = getIndexCell(fromX, fromY);
 
-    if (number < 1)
-        return ;
+//    if (index == -1)
+//        return ;
 
-    index_empty_cell = -1;
-    index = getIndexCell(fromX, fromY);
+    int num;
 
-    if (index == -1)
-        return ;
-
-    if (isCorrectCoordinates(fromX - 1, fromY) &&
-                isEmptyCell(fromX - 1, fromY))
-        index_empty_cell = getIndexCell(fromX - 1, fromY);
-    else if (isCorrectCoordinates(fromX, fromY - 1) &&
-                isEmptyCell(fromX, fromY - 1))
-        index_empty_cell = getIndexCell(fromX, fromY - 1);
-    else if (isCorrectCoordinates(fromX + 1, fromY) &&
-                isEmptyCell(fromX + 1, fromY))
-        index_empty_cell = getIndexCell(fromX + 1, fromY);
-    else if (isCorrectCoordinates(fromX, fromY + 1) &&
-                isEmptyCell(fromX, fromY + 1))
-        index_empty_cell = getIndexCell(fromX, fromY + 1);
+    if (isTrueIndex(index - 4) && cells[index - 4] == NUM_EMPTY_CELL)
+        cells[index - 4] = cells[index];
+    else if (isTrueIndex(index + 4) && cells[index + 4] == NUM_EMPTY_CELL)
+        cells[index + 4] = cells[index];
+    else if (isTrueIndex(index - 1) && cells[index - 1] == NUM_EMPTY_CELL)
+        cells[index - 1] = cells[index];
+    else if (isTrueIndex(index + 1) && cells[index + 1] == NUM_EMPTY_CELL)
+        cells[index + 1] = cells[index];
     else
         return ;
 
-    if (index_empty_cell == -1)
-        return ;
-
-    empty_num = cells[index_empty_cell].number;
-    cells[index_empty_cell].number = cells[index].number;
-    cells[index].number = empty_num;
+    cells[index] = NUM_EMPTY_CELL;
 
     QModelIndex topLeft = createIndex(0, 0);
     QModelIndex bottomRight = createIndex(NUMBER_CELLS - 1, 0);

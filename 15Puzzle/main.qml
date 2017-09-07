@@ -31,9 +31,6 @@ ApplicationWindow {
                 border.width: 1
                 radius: 10
 
-                x: width * positionX
-                y: height * positionY
-
                 visible: (number != 0) ? true : false
 
                 Text {
@@ -44,7 +41,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        logic.move(number, positionX, positionY);
+                        logic.move(index);
                         if (logic.checkWin())
                             endGameDialog.visible = true;
                     }
