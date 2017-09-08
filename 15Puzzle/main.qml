@@ -9,77 +9,127 @@ ApplicationWindow {
     height: 400
 
     visible: true
-    color: "black"
 
+    Rectangle {
+        id: game
 
-    GridView {
-        id: grid
-        anchors.fill: parent
-        cellWidth: parent.width / logic.boardSize
-        cellHeight: parent.height / logic.boardSize
+        color: "lightgray"
+        width: parent.height
+        height: parent.height
 
-        interactive: false
+        enabled: false
 
-        model: logic
-        delegate:
-            Component {
+        GridView {
+            id: grid
+            anchors.fill: parent
+
+            cellWidth: parent.width / logic.boardSize
+            cellHeight: parent.height / logic.boardSize
+
+            interactive: false
+
+            model: logic
+            delegate:
             Rectangle {
+                id: cell
                 height: grid.cellHeight
                 width: grid.cellWidth
                 color: "skyblue"
                 border.color: "black"
                 border.width: 1
                 radius: 10
-
                 visible: (number != 0) ? true : false
-
                 Text {
                     anchors.centerIn: parent
                     text: number
                 }
                 MouseArea {
+                    id: mouseArea
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        logic.move(index);
-                        if (logic.checkWin())
-                            endGameDialog.visible = true;
+                        if (logic.move(index))
+                        {
+                            if (logic.checkWin())
+                            {
+                                game.enabled = false
+                                endGameDialog.open()
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
+    Button {
+        id: newGameButton
+        anchors { left: game.right; right: parent.right; top: parent.top }
+        anchors { leftMargin: parent.width / 30; rightMargin: parent.width / 30; topMargin: parent.height / 10 }
+
+        height: parent.height / 4
+        width: parent.width / 4
+
+        Text {
+            anchors.centerIn: parent
+            text: qsTr("New Game")
+            font.bold: true
+        }
+        onClicked: {
+            logic.newGame()
+            game.enabled = true
+        }
+    }
+
+    Button {
+        id: quitGameButton
+        anchors { left: game.right; right: parent.right;
+            top: newGameButton.bottom; bottom: parent.bottom;
+            leftMargin: parent.width / 30; rightMargin: parent.width / 30;
+            topMargin: parent.height / 2.5; bottomMargin: parent.height / 10 }
+
+        height: parent.height / 8
+        width: parent.width / 4
+
+        Text {
+            anchors.centerIn: parent
+            text: qsTr("Quit")
+        }
+        onClicked: {
+            Qt.quit()
+        }
+    }
+
     Dialog {
         id: endGameDialog
-        visible: false
         title: qsTr("Game over")
         contentItem:
-        Rectangle {
+            Rectangle {
             color: "white"
             implicitWidth: 300
             implicitHeight: 200
 
             Text {
                 id: endGameText
-                text: "YOU WIN!"
+                text: qsTr("YOU WIN!")
                 color: "black"
-                font.pixelSize: 40
+                font.pixelSize: parent.height / 5
                 font.bold: true
-                anchors.centerIn: parent
-            }
+                font.family: "Helvetica"
 
+                anchors { top: parent.top; left: parent.left; right: parent.right;
+                    topMargin: parent.height / 5; leftMargin: parent.width / 5; rightMargin: parent.width / 5 }
+            }
             Button {
-                anchors.top: endGameText.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 10
-                height: 50
+                id: okDialogButton
+                anchors { top: endGameText.bottom; left: parent.left; right: parent.right;
+                    topMargin: parent.height / 7; leftMargin: parent.width / 5; rightMargin: parent.width / 5 }
+
+                height: parent.height / 5
 
                 text: qsTr("OK")
                 onClicked: {
                     endGameDialog.close()
-                    grid.enabled = false
                 }
             }
         }

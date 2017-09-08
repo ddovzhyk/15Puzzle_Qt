@@ -15,6 +15,10 @@ public:
         NUM_EMPTY_CELL = 0,
     };
 
+    enum Roles {
+        Number = Qt::UserRole
+    };
+
 public:
     explicit Logic(QObject *parent = 0);
     ~Logic();
@@ -22,19 +26,21 @@ public:
     Q_PROPERTY(int boardSize READ getBoardSize CONSTANT)
     int getBoardSize() const;
 
-    void setStartCoordinates(void);
+    void setStartCoordinates();
+    bool checkGame() const;
     bool isTrueIndex(int index) const;
-    Q_INVOKABLE void move(int index);
-    Q_INVOKABLE bool checkWin(void) const;
 
+    Q_INVOKABLE bool move(int index);
+    Q_INVOKABLE bool checkWin() const;
+    Q_INVOKABLE void newGame();
 
 protected:
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &modelIndex, int role = Qt::DisplayRole) const override;
-//    QHash<int, QByteArray> roleNames() const override;
+    QHash<int, QByteArray> roleNames() const override;
 
 private:
-    QVector<int> cells[16];
+    QVector<int> cells;
 };
 
 #endif
