@@ -13,18 +13,22 @@ ApplicationWindow {
     Rectangle {
         id: game
 
-        color: "lightgray"
+        color: "floralwhite"
         width: parent.height
         height: parent.height
-
+        border.color: "sandybrown"
+        border.width: 5
         enabled: false
 
         GridView {
             id: grid
             anchors.fill: parent
-
-            cellWidth: parent.width / logic.boardSize
-            cellHeight: parent.height / logic.boardSize
+            cellWidth: grid.width / logic.boardSize
+            cellHeight: grid.height / logic.boardSize
+            anchors.topMargin: 8
+            anchors.rightMargin: 8
+            anchors.bottomMargin: 8
+            anchors.leftMargin: 8
 
             interactive: false
 
@@ -32,16 +36,17 @@ ApplicationWindow {
             delegate:
             Rectangle {
                 id: cell
-                height: grid.cellHeight
-                width: grid.cellWidth
-                color: "skyblue"
-                border.color: "black"
-                border.width: 1
+                height: grid.cellHeight - 3
+                width: grid.cellWidth - 3
+                color: "lightblue"
+                border.color: "cadetblue"
+                border.width: 2
                 radius: 10
                 visible: (number != 0) ? true : false
                 Text {
                     anchors.centerIn: parent
                     text: number
+                    font.pixelSize: parent.height / 5
                 }
                 MouseArea {
                     id: mouseArea
@@ -58,6 +63,9 @@ ApplicationWindow {
                         }
                     }
                 }
+            }
+            move: Transition {
+                NumberAnimation { properties: "x,y"; duration: 150 }
             }
         }
     }
@@ -90,7 +98,6 @@ ApplicationWindow {
 
         height: parent.height / 8
         width: parent.width / 4
-
         Text {
             anchors.centerIn: parent
             text: qsTr("Quit")

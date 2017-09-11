@@ -99,21 +99,39 @@ bool Logic::move(int index)
 
     if (isTrueIndex(index - 4) && cells[index - 4] == NUM_EMPTY_CELL)
     {
-        moveRow(QModelIndex(), index - 4, QModelIndex(), index + 1);
-        moveRow(QModelIndex(), index, QModelIndex(), index - 3);
+        cells[index - 4] = cells[index];
+        if (beginMoveRows(QModelIndex(), index - 4, index - 4, QModelIndex(), index + 1))
+        {
+            endMoveRows();
+            if (beginMoveRows(QModelIndex(), index - 1, index - 1, QModelIndex(), index - 4))
+                endMoveRows();
+        }
     }
     else if (isTrueIndex(index + 4) && cells[index + 4] == NUM_EMPTY_CELL)
     {
-        moveRow(QModelIndex(), index + 4 + 1, QModelIndex(), index + 1);
-        moveRow(QModelIndex(), index, QModelIndex(), index );
+        cells[index + 4] = cells[index];
+        if (beginMoveRows(QModelIndex(), index + 4, index + 4, QModelIndex(), index + 1))
+        {
+            endMoveRows();
+            if (beginMoveRows(QModelIndex(), index, index, QModelIndex(), index + 5))
+                endMoveRows();
+        }
     }
     else if (isTrueIndex(index - 1) && cells[index - 1] == NUM_EMPTY_CELL)
+    {
         cells[index - 1] = cells[index];
+        if (beginMoveRows(QModelIndex(), index, index, QModelIndex(), index - 1))
+            endMoveRows();
+    }
     else if (isTrueIndex(index + 1) && cells[index + 1] == NUM_EMPTY_CELL)
+    {
         cells[index + 1] = cells[index];
+        if (beginMoveRows(QModelIndex(), index, index, QModelIndex(), index + 2))
+            endMoveRows();
+    }
     else
         return false;
-
+    cells[index] = NUM_EMPTY_CELL;
     return true;
 }
 
