@@ -1,5 +1,4 @@
 ﻿#include "logic.h"
-#include <algorithm>
 
 Logic::Logic(QObject *parent)
     : QAbstractListModel(parent)
@@ -58,13 +57,19 @@ void Logic::setStartCoordinates()
 
 }
 
+void Logic::random_shuffle()
+{
+    qsrand(unsigned(time(NULL)));
+    for (int i = 0; i < NUMBER_CELLS; ++i)
+        qSwap(cells[i], cells[qrand() % NUMBER_CELLS]);
+}
+
 void Logic::newGame()
 {
     do
-    {
-        srand(unsigned(time(NULL)));
-        std::random_shuffle(cells.begin(), cells.end());
-    } while (!checkGame());
+        random_shuffle();
+    while (!checkGame());
+
     emit dataChanged(createIndex(0, 0), createIndex(NUMBER_CELLS - 1, 0));
 }
 

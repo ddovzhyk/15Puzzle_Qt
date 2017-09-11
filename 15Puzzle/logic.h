@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QVector>
+#include <QtAlgorithms>
 
 class Logic: public QAbstractListModel
 {
@@ -29,6 +30,7 @@ public:
     void setStartCoordinates();
     bool checkGame() const;
     bool isTrueIndex(int index) const;
+    void random_shuffle();
 
     Q_INVOKABLE bool move(int index);
     Q_INVOKABLE bool checkWin() const;
