@@ -85,18 +85,13 @@ bool Logic::checkGame() const
                     cells[i] > cells[j])
                 ++inv;
     row_empty_cell = cells.indexOf(NUM_EMPTY_CELL) / 4 + 1;
-    if ((inv + row_empty_cell) % 2 == 0)
-        return true;
-    else
-        return false;
+
+    return ((inv + row_empty_cell) % 2 == 0);
 }
 
 bool Logic::isTrueIndex(int index) const
 {
-    if (index >= 0 && index < NUMBER_CELLS)
-        return true;
-    else
-        return false;
+    return (index >= 0 && index < NUMBER_CELLS);
 }
 
 bool Logic::move(int index)
@@ -104,7 +99,7 @@ bool Logic::move(int index)
 
     if (isTrueIndex(index - 4) && cells[index - 4] == NUM_EMPTY_CELL)
     {
-        cells[index - 4] = cells[index];
+        qSwap(cells[index], cells[index - 4]);
         if (beginMoveRows(QModelIndex(), index - 4, index - 4, QModelIndex(), index + 1))
         {
             endMoveRows();
@@ -114,7 +109,7 @@ bool Logic::move(int index)
     }
     else if (isTrueIndex(index + 4) && cells[index + 4] == NUM_EMPTY_CELL)
     {
-        cells[index + 4] = cells[index];
+        qSwap(cells[index], cells[index + 4]);
         if (beginMoveRows(QModelIndex(), index + 4, index + 4, QModelIndex(), index + 1))
         {
             endMoveRows();
@@ -124,19 +119,19 @@ bool Logic::move(int index)
     }
     else if (isTrueIndex(index - 1) && cells[index - 1] == NUM_EMPTY_CELL)
     {
-        cells[index - 1] = cells[index];
+        qSwap(cells[index], cells[index - 1]);
         if (beginMoveRows(QModelIndex(), index, index, QModelIndex(), index - 1))
             endMoveRows();
     }
     else if (isTrueIndex(index + 1) && cells[index + 1] == NUM_EMPTY_CELL)
     {
-        cells[index + 1] = cells[index];
+        qSwap(cells[index], cells[index + 1]);
         if (beginMoveRows(QModelIndex(), index, index, QModelIndex(), index + 2))
             endMoveRows();
     }
     else
         return false;
-    cells[index] = NUM_EMPTY_CELL;
+
     return true;
 }
 
